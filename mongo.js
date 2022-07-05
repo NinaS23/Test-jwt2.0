@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient , ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -16,5 +16,6 @@ try {
 }
 
 export {
-    db
+    db,
+    ObjectId
 }
