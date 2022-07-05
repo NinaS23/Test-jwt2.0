@@ -16,7 +16,7 @@ console.log("oi")
 app.post("/cadastrarUser" , async (req, res)=>{
     const  { email , senha } = req.body
     console.log("Oi")
-
+try{
     const userSchema = joi.object({
         email: joi.string().email().required(),
         senha: joi.string().required()
@@ -34,28 +34,33 @@ app.post("/cadastrarUser" , async (req, res)=>{
 
     await db.collection("users_jwt").insertOne({email , senha })
     return res.status(200).send("OK")
+}catch(e){console.log(e)}
+   
 })
 
 app.post("/logar",async (req, res) => {
     const { email, senha } = req.body
-    const userSchema = joi.object({
-        email: joi.string().email().required(),
-        senha: joi.string().required()
-    })
+    try{
+        const userSchema = joi.object({
+            email: joi.string().email().required(),
+            senha: joi.string().required()
+        })
+       
+        console.log(email, senha)
+        const validar = userSchema.validate({ email, senha })
+        if(validar.error){
+            return res.status(400).send("formato incorreto")
+        }
+        const usuarioExistente = await db.collection("users_jwt").findOne({email})
+        const dados = {email:email};
+        const key = "secret"
+        if(!usuarioExistente){
+            return res.send("email ou senha incorretos")
+        }
+        const token = jwt.sign(dados, key);
+        return res.send({token})
+    }catch(e){console.log(e)}
    
-    console.log(email, senha)
-    const validar = userSchema.validate({ email, senha })
-    if(validar.error){
-        return res.status(400).send("formato incorreto")
-    }
-    const usuarioExistente = await db.collection("users_jwt").findOne({email})
-    const dados = {email:email};
-    const key = "secret"
-    if(!usuarioExistente){
-        return res.send("email ou senha incorretos")
-    }
-    const token = jwt.sign(dados, key);
-    return res.send({token})
    
 })
 const PORT = 3580
