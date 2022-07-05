@@ -53,7 +53,7 @@ app.post("/logar",async (req, res) => {
         }
         const usuarioExistente = await db.collection("users_jwt").findOne({email})
         const dados = {email:email};
-        const key = "secret"
+        const key = "secret" // aqui é pra ser uma variável de hambiente , por segurança e não ficar aqui no code 
       //  const configuracoes = { expiresIn: 60*60*24*30 } // 30 dias em segundos para expirar
         if(!usuarioExistente){
             return res.send("email ou senha incorretos")
