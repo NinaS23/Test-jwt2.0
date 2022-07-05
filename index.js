@@ -54,10 +54,11 @@ app.post("/logar",async (req, res) => {
         const usuarioExistente = await db.collection("users_jwt").findOne({email})
         const dados = {email:email};
         const key = "secret"
+      //  const configuracoes = { expiresIn: 60*60*24*30 } // 30 dias em segundos para expirar
         if(!usuarioExistente){
             return res.send("email ou senha incorretos")
         }
-        const token = jwt.sign(dados, key);
+        const token = jwt.sign(dados, key);//aqui dentro , coloca-se o configuraçoes 
         return res.send({token})
     }catch(e){console.log(e)}
    
